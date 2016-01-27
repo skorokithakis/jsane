@@ -125,3 +125,15 @@ Self-promotion
 --------------
 
 It's me, Stavros.
+
+
+FAQ
+---
+
+* Do you find it ironic that the README for JSane is insane?
+
+  No.
+
+* Is this library awesome?
+
+  Yes.
