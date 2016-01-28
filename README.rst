@@ -143,3 +143,7 @@ FAQ
 * Is this library awesome?
 
   Yes.
+
+* I hate the `.r()` thing, is there any way to avoid it?
+
+  Did you even **read** this README?
