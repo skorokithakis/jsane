@@ -66,7 +66,7 @@ Motivation (non-infomercial version)
 ------------------------------------
 
 Okay seriously, ``this["thing"]["is"]["no"]["fun"]``. JSane lets you
-``traverse.json.like.this``. That's it.
+``traverse.json.like.this.r()``. That's it.
 
 
 Usage
