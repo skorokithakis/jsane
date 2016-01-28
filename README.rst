@@ -77,37 +77,44 @@ module. Here's an example::
 
     >>> import jsane
 
-    >>> j = jsane.loads('{"some": "json"}')
-    >>> j.some
-    "json"
+    >>> j = jsane.loads('{"some": {"json": [1, 2, 3]}}')
+    >>> j.some.json[2].r()
+    3
 
-If the key does not exist, you'll get an exception. You can get rid of that by
-specifying a default::
+Due to Python being a non-insane language, there's a limit to the amount of
+crap you can pull with it, so JSane actually returns a `Traversable`  object on
+accesses::
+
+    >>> j = jsane.loads('{"foo": {"bar": {"baz": "yes!"}}}')
+    >>> type(j.foo)
+    Traversable
+
+If you want your real object back at the end of the wild attribute ride, call
+`.r()`::
+
+    >>> j.foo.bar.r()
+    {"baz": "yes!"}
+
+If an attribute, item or index along the way does not exist, you'll get an
+exception. You can get rid of that by specifying a default::
 
     >>> import jsane
 
     >>> j = jsane.loads('{"some": "json"}')
-    >>> j(default="💩").haha_sucka_this_doesnt_exist
+    >>> j.haha_sucka_this_doesnt_exist.r(default="💩")
     "💩"
 
+"But how do I access a key called `r`?!", I hear you ask. Worry not, I got you
+covered::
 
-Due to Python being a non-insane language, there's a limit to the amount of
-crap you can pull with it, so JSane actually returns a `Traversable`  object if
-you access a `dict` or `list`::
+    >>> j.key["r"].more_key.r()
 
-    >>> j = jsane.loads('{"foo": {"bar": "baz"}}')
-    >>> type(j.foo)
-    Traversable
+Confused? Don't name your keys `r`, then.
 
-If you want your object back, call `.resolve()`::
-
-    >>> j.foo.resolve()
-    {"bar": "baz"}
-
-That's about it. I'm not loving this API, so if anyone has any good
-recommendations on how I may better fulfil my unholy purpose, I'm changing the
-API on the spot. No guarantees of stability before version 1, as always. Semver
-giveth, and semver taketh away.
+That's about it. I'm not loving the `r()` API, so if anyone has any good
+recommendations on how I may better fulfil my unholy purpose, I'm changing it on
+the spot. No guarantees of stability before version 1, as always. Semver giveth,
+and semver taketh away.
 
 Help needed/welcome/etc, mostly with designing the API. Also, if you find this
 library useless, let me know.
