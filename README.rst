@@ -7,17 +7,16 @@ JSane is a JSON "parser" that makes attribute accesses easier.
 Motivation
 ----------
 
-Picture the scene. You're a jet-setting developer who is obsessed with
-going to the gym. One day, a world-class jewel thief kidnaps you and
-asks you to hack into the super-secure bank server in thirty seconds,
-while an ultramodel is performing oral sex on you. You hurriedly trace
-the protocol on the wire, only to discover, to your dismay, that it uses
-JSON. Nested JSON, with levels and levels of keys.
+Picture the scene. You're a jet-setting developer who is obsessed with going to
+the gym. One day, a world-class jewel thief kidnaps you and asks you to hack
+into the super-secure bank server in thirty seconds, while an ultramodel is
+performing oral sex on you. You hurriedly trace the protocol on the wire, only
+to discover, to your dismay, that it uses JSON. Nested JSON, with levels and
+levels of keys.
 
-It's hopeless! You'll never type all those brackets and quotation marks
-in time! Suddenly, a flash of a memory races through your mind, like
-some cliche from a badly-written Github README. You launch the shell and
-type two words::
+It's hopeless! You'll never type all those brackets and quotation marks in time!
+Suddenly, a flash of a memory races through your mind, like some cliche from
+a badly-written README. You launch the shell and type two words::
 
     import jsane
 
