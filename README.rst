@@ -9,9 +9,9 @@ Three-line intro
 ::
 
     >>> import jsane
-    >>> j = jsane.loads({"foo": {"bar": {"baz": ["well", "hello", "there"]}}})
-    >>> j.foo.bar.baz[1]
-    "hello"
+    >>> j = jsane.loads('{"foo": {"bar": {"baz": ["well", "hello", "there"]}}}')
+    >>> j.foo.bar.baz[1].r()
+    u'hello'
 
 
 Motivation
