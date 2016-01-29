@@ -71,6 +71,8 @@ class TestClass:
             j.key_2.nonexistent[0].r()
         with pytest.raises(JSaneException):
             j.key_2.key_21[7].r()
+        with pytest.raises(JSaneException):
+            j.key_1.key_2.r()
         with pytest.raises(IndexError):
             j.key_2.key_24.key_244.key_2442[0].r()[7]
         with pytest.raises(JSaneException):
@@ -78,6 +80,7 @@ class TestClass:
 
     def test_default(self):
         j = loads(self.json1)
+        assert j.key_1.key_2.r(None) is None
         assert j.key_2.nonexistent[0].r("default") == "default"
         assert j.key_2.key_21[7].r("default") == "default"
         with pytest.raises(IndexError):

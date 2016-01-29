@@ -14,6 +14,9 @@ class Empty(object):
         return self
     __getitem__ = __getattr__
 
+    def __repr__(self):
+        return "<Traversable key does not exist: %s>" % self._key_name
+
     def r(self, default=DEFAULT):
         if default is DEFAULT:
             raise JSaneException("Key does not exist: %s" % self._key_name)
@@ -28,7 +31,7 @@ class Traversable(object):
     def __getattr__(self, key):
         try:
             return Traversable(self._obj[key])
-        except (KeyError, AttributeError, IndexError):
+        except (KeyError, AttributeError, IndexError, TypeError):
             return Empty(key)
     __getitem__ = __getattr__
 
@@ -39,7 +42,7 @@ class Traversable(object):
         return self._obj == other._obj
 
     def __repr__(self):
-        return repr(self._obj)
+        return "<Traversable: %r>" % self._obj
 
     def r(self, default=DEFAULT):
         """
