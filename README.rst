@@ -82,8 +82,14 @@ Okay seriously, ``this["thing"]["is"]["no"]["fun"]``. JSane lets you
 Usage
 -----
 
-Using JSane is simple, at least. It's pretty much a copy of the builtin `json`
-module. Here's an example::
+Using JSane is simple, at least. It's pretty much a copy of the builtin
+``json`` module.
+
+First of all, install it with ``pip`` or ``easy_install``::
+
+    pip install jsane
+
+Here's an example of its usage::
 
     >>> import jsane
 
@@ -92,7 +98,7 @@ module. Here's an example::
     3
 
 Due to Python being a non-insane language, there's a limit to the amount of
-crap you can pull with it, so JSane actually returns a `Traversable`  object on
+crap you can pull with it, so JSane actually returns a ``Traversable`` object on
 accesses::
 
     >>> j = jsane.loads('{"foo": {"bar": {"baz": "yes!"}}}')
@@ -100,7 +106,7 @@ accesses::
     Traversable
 
 If you want your real object back at the end of the wild attribute ride, call
-`.r()`::
+``.r()``::
 
     >>> j.foo.bar.r()
     {"baz": "yes!"}
@@ -114,14 +120,14 @@ exception. You can get rid of that by specifying a default::
     >>> j.haha_sucka_this_doesnt_exist.r(default="💩")
     "💩"
 
-"But how do I access a key called `r`?!", I hear you ask. Worry not, I got you
+"But how do I access a key called ``r``?!", I hear you ask. Worry not, I got you
 covered::
 
     >>> j.key["r"].more_key.r()
 
-Confused? Don't name your keys `r`, then.
+Confused? Don't name your keys ``r``, then.
 
-That's about it. I'm not loving the `r()` API, so if anyone has any good
+That's about it. I'm not loving the ``r()`` API, so if anyone has any good
 recommendations on how I may better fulfil my unholy purpose, I'm changing it on
 the spot. No guarantees of stability before version 1, as always. Semver giveth,
 and semver taketh away.
