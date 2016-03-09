@@ -6,7 +6,7 @@ import pep8
 
 sys.path.insert(0, os.path.abspath(__file__ + "/../.."))
 
-from jsane import loads, dumps, JSaneException
+from jsane import loads, dumps, JSaneException, from_dict
 from jsane.traversable import Traversable
 
 
@@ -57,6 +57,7 @@ class TestClass:
     def test_wrapper(self):
         assert loads(dumps(self.dict1)).r() == self.dict1
         assert json.dumps(self.dict1) == dumps(self.dict1)
+        assert self.dict1["foo"] == from_dict(self.dict1).foo.r()
         assert loads(dumps(self.dict1)), Traversable(self.dict1)
 
     def test_access(self):
