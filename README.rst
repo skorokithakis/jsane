@@ -97,6 +97,14 @@ Here's an example of its usage::
     >>> j.some.json[2].r()
     3
 
+You can also load an existing dictionary::
+    >>> j = jsane.from_dict({"hi": "there"})
+    >>> j.hi
+    'there'
+
+If the dictionary contains any data types that aren't valid in JSON (like
+functions), it still should work, but you're on your own.
+
 Due to Python being a non-insane language, there's a limit to the amount of
 crap you can pull with it, so JSane actually returns a ``Traversable`` object on
 accesses::

@@ -19,3 +19,7 @@ def dump(*args, **kwargs):
 
 def dumps(*args, **kwargs):
     return json.dumps(*args, **kwargs)
+
+
+def from_dict(jdict):
+    return Traversable(jdict)
