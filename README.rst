@@ -1,6 +1,9 @@
 JSane
 =====
 
+.. image:: https://travis-ci.org/skorokithakis/jsane.svg?branch=master
+    :target: https://travis-ci.org/skorokithakis/jsane
+
 JSane is a JSON "parser" that makes attribute accesses easier.
 
 Three-line intro
