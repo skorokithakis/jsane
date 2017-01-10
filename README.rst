@@ -172,4 +172,8 @@ FAQ
 
   Did you even **read** this README?
 
+  Alright, there is now a way to avoid it. Instead of ``j.foo.bar.r()``, you can
+  just call the last key, i.e. ``j,foo.bar()``. Let me know what you think in
+  `the relevant issue <https://github.com/skorokithakis/jsane/issues/3>`.
+
 .. _The day is saved: https://www.youtube.com/watch?v=mWqGJ613M5Y
