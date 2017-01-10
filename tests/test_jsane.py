@@ -62,12 +62,19 @@ class TestClass:
 
     def test_access(self):
         j = loads(self.json1)
+        assert j.key_1() == "value_1"
+        assert j["r"]() == "yo"
+        assert j.key_2.key_21[1][1]() == 2111
         assert j.key_1.r() == "value_1"
         assert j["r"].r() == "yo"
         assert j.key_2.key_21[1][1].r() == 2111
 
     def test_exception(self):
         j = loads(self.json1)
+        with pytest.raises(JSaneException):
+            j.key_2.nonexistent[0]()
+        with pytest.raises(JSaneException):
+            j.key_2.key_21[7]()
         with pytest.raises(JSaneException):
             j.key_2.nonexistent[0].r()
         with pytest.raises(JSaneException):
@@ -81,6 +88,9 @@ class TestClass:
 
     def test_default(self):
         j = loads(self.json1)
+        assert j.key_1.key_2(None) is None
+        assert j.key_2.nonexistent[0]("default") == "default"
+        assert j.key_2.key_21[7]("default") == "default"
         assert j.key_1.key_2.r(None) is None
         assert j.key_2.nonexistent[0].r("default") == "default"
         assert j.key_2.key_21[7].r("default") == "default"

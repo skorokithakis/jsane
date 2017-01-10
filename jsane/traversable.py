@@ -22,6 +22,7 @@ class Empty(object):
             raise JSaneException("Key does not exist: %s" % self._key_name)
         else:
             return default
+    __call__ = r
 
 
 class Traversable(object):
@@ -52,3 +53,4 @@ class Traversable(object):
         will be returned farther upstream.
         """
         return self._obj
+    __call__ = r
