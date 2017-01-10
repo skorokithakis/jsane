@@ -30,7 +30,7 @@ a badly-written README. You launch the shell and type two words::
 
     import jsane
 
-The day is saved.
+`The day is saved`_.
 
 
 Motivation (non-Hollywood version)
@@ -171,3 +171,5 @@ FAQ
 * I hate the `.r()` thing, is there any way to avoid it?
 
   Did you even **read** this README?
+
+.. _The day is saved: https://www.youtube.com/watch?v=rUY8HysBzsE
