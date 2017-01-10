@@ -105,7 +105,7 @@ You can also load an existing dictionary::
 If the dictionary contains any data types that aren't valid in JSON (like
 functions), it still should work, but you're on your own.
 
-Due to Python being a non-insane language, there's a limit to the amount of
+Due to Python being a sensible language, there's a limit to the amount of
 crap you can pull with it, so JSane actually returns a ``Traversable`` object on
 accesses::
 
