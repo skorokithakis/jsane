@@ -42,6 +42,10 @@ class Traversable(object):
             return False
         return self._obj == other._obj
 
+    def __contains__(self, other):
+        """Membership test."""
+        return other in self._obj
+
     def __repr__(self):
         return "<Traversable: %r>" % self._obj
 
