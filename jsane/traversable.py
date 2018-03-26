@@ -37,14 +37,10 @@ class Traversable(object):
     __getitem__ = __getattr__
 
     def __eq__(self, other):
-        "Equality test."
+        """Equality test."""
         if not hasattr(other, "_obj"):
             return False
         return self._obj == other._obj
-
-    def __contains__(self, other):
-        """Membership test."""
-        return other in self._obj
 
     def __repr__(self):
         return "<Traversable: %r>" % self._obj
