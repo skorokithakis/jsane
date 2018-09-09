@@ -6,7 +6,7 @@ import pep8
 
 sys.path.insert(0, os.path.abspath(__file__ + "/../.."))
 
-from jsane import loads, dumps, JSaneException, from_dict
+from jsane import loads, dumps, JSaneException, from_dict, from_object
 from jsane.traversable import Traversable
 
 
@@ -113,3 +113,11 @@ class TestClass:
                                     parse_argv=False)
         report = pep8style.check_files()
         assert report.total_errors == 0
+
+    def test_obj(self):
+        obj = [1, 2, 3, {"foo": "bar"}]
+        j = from_object(obj)
+        assert j[0].r() == 1
+        for x, y in zip(j, obj):
+            assert x.r() == y
+        assert j[3].foo.r() == "bar"
