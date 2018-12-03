@@ -16,14 +16,18 @@ class Empty(object):
         raise JSaneException("There is nothing here!")
 
     def __delattr__(self, key):
-        raise JSaneException("Key does not exist: %s" % (self._key_name,))
+        raise JSaneException(
+            "Key does not exist: {}".format(repr(self._key_name))
+        )
     __delitem__ = __delattr__
 
     def __eq__(self, other):
         return False
 
     def __repr__(self):
-        return "<Traversable key does not exist: %s>" % self._key_name
+        return "<Traversable key does not exist: {}>".format(
+            repr(self._key_name)
+        )
 
     def r(self, **kwargs):
         """
@@ -38,15 +42,19 @@ class Empty(object):
             default = kwargs.pop('default')
             if kwargs:
                 raise TypeError(
-                    "Unexpected argument: %s" % (next(iter(kwargs)),)
+                    "Unexpected argument: {}".format(repr(next(iter(kwargs))))
                 )
             return default
         else:
-            raise JSaneException("Key does not exist: %s" % (self._key_name,))
+            raise JSaneException(
+                "Key does not exist: {}".format(repr(self._key_name))
+            )
     __call__ = r
 
     def __dir__(self):
-        raise JSaneException("Key does not exist: %s" % (self._key_name,))
+        raise JSaneException(
+            "Key does not exist: {}".format(repr(self._key_name))
+        )
 
 
 class Traversable(object):
@@ -79,7 +87,7 @@ class Traversable(object):
         try:
             del self._obj[key]
         except KeyError:
-            raise JSaneException("Key does not exist: %s" % (key,))
+            raise JSaneException("Key does not exist: {}".format(repr(key)))
     __delitem__ = __delattr__
 
     def __eq__(self, other):
@@ -97,7 +105,7 @@ class Traversable(object):
             return NotImplemented
 
     def __repr__(self):
-        return "<Traversable: %r>" % self._obj
+        return "<Traversable: {}>".format(repr(self._obj))
 
     def r(self, **kwargs):
         """
@@ -111,7 +119,9 @@ class Traversable(object):
         # a TypeError
         kwargs.pop('default', None)
         if kwargs:
-            raise TypeError("Unexpected argument: %s" % (next(iter(kwargs)),))
+            raise TypeError(
+                "Unexpected argument: {}".format(repr(next(iter(kwargs))))
+            )
         return self._obj
     __call__ = r
 
