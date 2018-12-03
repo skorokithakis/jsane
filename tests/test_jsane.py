@@ -6,7 +6,7 @@ import pep8
 
 sys.path.insert(0, os.path.abspath(__file__ + "/../.."))
 
-from jsane import loads, dumps, JSaneException, from_dict, from_object
+from jsane import loads, dumps, JSaneException, from_dict, from_object, new
 from jsane.traversable import Traversable
 
 
@@ -140,6 +140,10 @@ class TestClass:
         assert "key_22" in dir(j.key_2)
         with pytest.raises(JSaneException):
             dir(j.nonexistent)
+
+    def test_new(self):
+        assert new()() == {}
+        assert new(list)() == []
 
     def test_setting(self):
         j = loads(self.json1)

@@ -13,12 +13,16 @@ def loads(*args, **kwargs):
     return Traversable(j)
 
 
-def dump(*args, **kwargs):
-    return json.dump(*args, **kwargs)
+def dump(obj, *args, **kwargs):
+    if isinstance(obj, Traversable):
+        obj = obj._obj
+    return json.dump(obj, *args, **kwargs)
 
 
-def dumps(*args, **kwargs):
-    return json.dumps(*args, **kwargs)
+def dumps(obj, *args, **kwargs):
+    if isinstance(obj, Traversable):
+        obj = obj._obj
+    return json.dumps(obj, *args, **kwargs)
 
 
 def from_dict(jdict):
@@ -33,3 +37,7 @@ def from_object(obj):
     Return a JSane Traversable object from any object (e.g. a list).
     """
     return Traversable(obj)
+
+
+def new(kind=dict):
+    return Traversable(kind())
