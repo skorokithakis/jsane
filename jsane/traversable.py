@@ -6,9 +6,12 @@ class Empty(object):
     def __init__(self, key_name=""):
         self._key_name = key_name
 
-    def __getattr__(self, key):
-        return self
+    def __getattr__(self, _):
+        return self  # Empty object returned should reflect the 1st failed key
     __getitem__ = __getattr__
+
+    def __eq__(self, other):
+        return False
 
     def __repr__(self):
         return "<Traversable key does not exist: %s>" % self._key_name
@@ -46,10 +49,18 @@ class Traversable(object):
     __getitem__ = __getattr__
 
     def __eq__(self, other):
-        """Equality test."""
-        if not hasattr(other, "_obj"):
-            return False
-        return self._obj == other._obj
+        """
+        Compare to other objects very reluctantly.
+
+        Only succeed when both objects are Traversable objects, and
+        fail otherwise (which defaults to returning False) to ensure
+        that the developer doesn't forget too easily what kind of
+        object they're actually using.
+        """
+        if isinstance(other, Traversable):
+            return self._obj == other._obj
+        else:
+            return NotImplemented
 
     def __repr__(self):
         return "<Traversable: %r>" % self._obj

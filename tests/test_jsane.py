@@ -103,6 +103,16 @@ class TestClass:
         assert j.key_2.key_21[0].r() == [2100, 2101]
         assert j.key_2.key_24.key_244.key_2442[0].r()[0] == "l"
 
+    def test_equality_behavior(self):
+        i = loads('{"five": 5}')
+        f = loads('{"five": 5.0}')
+        assert i == f  # comparisons succeed between Traversable objects
+        assert i.five == f.five
+        assert i != {"five": 5}  # comparisons always return False otherwise
+        assert i.five != 5
+        assert i() == {"five": 5}
+        assert i.five() == 5  # once the value is out, comparison succeeds
+
     def test_pep8(self):
         pep8style = pep8.StyleGuide([['statistics', True],
                                      ['show-sources', True],
