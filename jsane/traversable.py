@@ -32,7 +32,7 @@ class Empty(object):
             repr(self._key_name)
         )
 
-    def r(self, **kwargs):
+    def __call__(self, **kwargs):
         """
         Resolve the object.
 
@@ -52,7 +52,6 @@ class Empty(object):
             raise JSaneException(
                 "Key does not exist: {}".format(repr(self._key_name))
             )
-    __call__ = r
 
     def __pos__(self):
         return float('nan')
@@ -122,7 +121,7 @@ class Traversable(object):
     def __repr__(self):
         return "<Traversable: {}>".format(repr(self._obj))
 
-    def r(self, **kwargs):
+    def __call__(self, **kwargs):
         """
         Resolve the object.
 
@@ -138,7 +137,6 @@ class Traversable(object):
                 "Unexpected argument: {}".format(repr(next(iter(kwargs))))
             )
         return self._obj
-    __call__ = r
 
     def __pos__(self):
         """

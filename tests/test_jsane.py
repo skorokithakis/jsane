@@ -57,9 +57,9 @@ class TestClass:
         self.dict1 = {"foo": "bar"}
 
     def test_wrapper(self):
-        assert loads(dumps(self.dict1)).r() == self.dict1
+        assert loads(dumps(self.dict1))() == self.dict1
         assert json.dumps(self.dict1) == dumps(self.dict1)
-        assert self.dict1["foo"] == from_dict(self.dict1).foo.r()
+        assert self.dict1["foo"] == from_dict(self.dict1).foo()
         assert loads(dumps(self.dict1)), Traversable(self.dict1)
 
     def test_access(self):
@@ -67,9 +67,9 @@ class TestClass:
         assert j.key_1() == "value_1"
         assert j["r"]() == "yo"
         assert j.key_2.key_21[1][1]() == 2111
-        assert j.key_1.r() == "value_1"
-        assert j["r"].r() == "yo"
-        assert j.key_2.key_21[1][1].r() == 2111
+        assert j.key_1() == "value_1"
+        assert j["r"]() == "yo"
+        assert j.key_2.key_21[1][1]() == 2111
 
     def test_exception(self):
         j = loads(self.json1)
@@ -78,32 +78,30 @@ class TestClass:
         with pytest.raises(JSaneException):
             j.key_2.key_21[7]()
         with pytest.raises(JSaneException):
-            j.key_2.nonexistent[0].r()
+            j.key_2.nonexistent[0]()
         with pytest.raises(JSaneException):
-            j.key_2.key_21[7].r()
+            j.key_2.key_21[7]()
         with pytest.raises(JSaneException):
-            j.key_1.key_2.r()
+            j.key_1.key_2()
         with pytest.raises(IndexError):
-            j.key_2.key_24.key_244.key_2442[0].r()[7]
+            j.key_2.key_24.key_244.key_2442[0]()[7]
         with pytest.raises(JSaneException):
-            j.key_2.key_24.key_244.key_2442[0][7].r()
+            j.key_2.key_24.key_244.key_2442[0][7]()
 
     def test_default(self):
         j = loads(self.json1)
         assert j.key_1.key_2(default=None) is None
         assert j.key_2.nonexistent[0](default="default") == "default"
         assert j.key_2.key_21[7](default="default") == "default"
-        assert j.key_1.key_2.r(default=None) is None
-        assert j.key_2.nonexistent[0].r(default="default") == "default"
-        assert j.key_2.key_21[7].r(default="default") == "default"
         with pytest.raises(IndexError):
-            j.key_2.key_24.key_244.key_2442[0].r(default="default")[7]
+            j.key_2.key_24.key_244.key_2442[0](default="default")[7]
 
     def test_resolution(self):
         j = loads(self.json1)
-        assert j.key_2.key_21[0].r() == [2100, 2101]
-        assert j.key_2.key_21[0].r() == [2100, 2101]
-        assert j.key_2.key_24.key_244.key_2442[0].r()[0] == "l"
+        assert j.r() == "yo"
+        assert j.key_2.key_21[0]() == [2100, 2101]
+        assert j.key_2.key_21[0]() == [2100, 2101]
+        assert j.key_2.key_24.key_244.key_2442[0]()[0] == "l"
 
     def test_numeric_resolution(self):
         j = loads(self.json1)
@@ -131,7 +129,7 @@ class TestClass:
         j = loads(self.json1)
         assert "key_1" in j
         assert "v" not in j.key_1  # do not pass 'in' operator to strings
-        assert "v" in j.key_1.r()
+        assert "v" in j.key_1()
         assert "key_22" in j.key_2
         assert "l1" in j.key_2.key_22  # do pass 'in' operator to lists
         assert "nonexistent" not in j
@@ -188,7 +186,7 @@ class TestClass:
     def test_obj(self):
         obj = [1, 2, 3, {"foo": "bar"}]
         j = from_object(obj)
-        assert j[0].r() == 1
+        assert j[0]() == 1
         for x, y in zip(j, obj):
-            assert x.r() == y
-        assert j[3].foo.r() == "bar"
+            assert x() == y
+        assert j[3].foo() == "bar"
