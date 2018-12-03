@@ -1,3 +1,6 @@
+from numbers import Number
+
+
 class JSaneException(Exception):
     pass
 
@@ -50,6 +53,15 @@ class Empty(object):
                 "Key does not exist: {}".format(repr(self._key_name))
             )
     __call__ = r
+
+    def __pos__(self):
+        return float('nan')
+
+    def __str__(self):
+        raise JSaneException(
+            "Key does not exist: {}".format(repr(self._key_name))
+        )
+    __int__ = __float__ = __str__
 
     def __contains__(self, _):
         return False
@@ -127,6 +139,46 @@ class Traversable(object):
             )
         return self._obj
     __call__ = r
+
+    def __pos__(self):
+        """
+        Resolve the object as a number ONLY if it is a number.
+
+        Missing keys or non-numeric type will yield nan. Numeric
+        strings are not considered to be numbers under this
+        determination.
+        """
+        if isinstance(self._obj, Number):
+            return self._obj
+        else:
+            return float('nan')
+
+    def __str__(self):
+        """
+        Resolve the object and turn it into a string if it is not already.
+
+        Essentially, str(traversable) is syntactic sugar for
+        str(traversable()).
+        """
+        return str(self._obj)
+
+    def __int__(self):
+        """
+        Resolve the object as an int if possible.
+
+        Essentially, int(traversable) is syntactic sugar for
+        int(traversable()).
+        """
+        return int(self._obj)
+
+    def __float__(self):
+        """
+        Resolve the object as a float if possible.
+
+        Essentially, float(traversable) is syntactic sugar for
+        float(traversable()).
+        """
+        return float(self._obj)
 
     def __contains__(self, key):
         """

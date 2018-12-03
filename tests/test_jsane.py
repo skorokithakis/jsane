@@ -105,6 +105,28 @@ class TestClass:
         assert j.key_2.key_21[0].r() == [2100, 2101]
         assert j.key_2.key_24.key_244.key_2442[0].r()[0] == "l"
 
+    def test_numeric_resolution(self):
+        j = loads(self.json1)
+        assert +j.key_2.key_24.key_241 == 502
+        assert +j.key_2.key_24.key_242[1][0] == 7
+        assert +j.key_1 != +j.key_1  # inequality to oneself is the NaN test
+        assert +j.nonexistent != +j.nonexistent
+        assert +j.numeric_string != +j.numeric_string
+
+    def test_easy_casting(self):
+        j = loads(self.json1)
+        assert str(j.key_2.key_21[0]) == "[2100, 2101]"
+        assert str(j.numeric_string) == "115"
+        assert int(j.numeric_string) == 115
+        assert float(j.numeric_string) == 115.0
+        assert type(float(j.numeric_string)) is float
+        assert float(j.key_2.key_24.key_241) == 502
+        assert type(float(j.key_2.key_24.key_241)) is float
+        with pytest.raises(ValueError):
+            int(j.key_1)
+        with pytest.raises(ValueError):
+            float(j.key_1)
+
     def test_contains(self):
         j = loads(self.json1)
         assert "key_1" in j
