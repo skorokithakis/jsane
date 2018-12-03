@@ -51,6 +51,9 @@ class Empty(object):
             )
     __call__ = r
 
+    def __contains__(self, _):
+        return False
+
     def __dir__(self):
         raise JSaneException(
             "Key does not exist: {}".format(repr(self._key_name))
@@ -124,6 +127,19 @@ class Traversable(object):
             )
         return self._obj
     __call__ = r
+
+    def __contains__(self, key):
+        """
+        Test for containment if the wrapped object is a list or dict.
+
+        Do not always check for containment whenever it supports the
+        operator, as this could result in some very sneaky bugs if a
+        key in the JSON is a string instead of a nested JSON object.
+        """
+        if isinstance(self._obj, (dict, list)):
+            return key in self._obj
+        else:
+            return False
 
     def __dir__(self):
         """

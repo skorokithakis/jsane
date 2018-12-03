@@ -105,6 +105,15 @@ class TestClass:
         assert j.key_2.key_21[0].r() == [2100, 2101]
         assert j.key_2.key_24.key_244.key_2442[0].r()[0] == "l"
 
+    def test_contains(self):
+        j = loads(self.json1)
+        assert "key_1" in j
+        assert "v" not in j.key_1  # do not pass 'in' operator to strings
+        assert "v" in j.key_1.r()
+        assert "key_22" in j.key_2
+        assert "l1" in j.key_2.key_22  # do pass 'in' operator to lists
+        assert "nonexistent" not in j
+
     def test_dir(self):
         j = loads(self.json1)
         assert "numeric_string" in dir(j)
