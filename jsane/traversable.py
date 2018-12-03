@@ -45,6 +45,9 @@ class Empty(object):
             raise JSaneException("Key does not exist: %s" % (self._key_name,))
     __call__ = r
 
+    def __dir__(self):
+        raise JSaneException("Key does not exist: %s" % (self._key_name,))
+
 
 class Traversable(object):
     def __init__(self, obj):
@@ -111,3 +114,15 @@ class Traversable(object):
             raise TypeError("Unexpected argument: %s" % (next(iter(kwargs)),))
         return self._obj
     __call__ = r
+
+    def __dir__(self):
+        """
+        Return the attributes of this object.
+
+        Includes keys of the internal object if it's a dictionary.
+        Tremendously helpful for advanced interactive shell.
+        """
+        keys = dir(super(Traversable, self))
+        if isinstance(self._obj, dict):
+            keys += sorted(str(k) for k in self._obj)
+        return keys

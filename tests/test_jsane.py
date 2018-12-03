@@ -105,6 +105,13 @@ class TestClass:
         assert j.key_2.key_21[0].r() == [2100, 2101]
         assert j.key_2.key_24.key_244.key_2442[0].r()[0] == "l"
 
+    def test_dir(self):
+        j = loads(self.json1)
+        assert "numeric_string" in dir(j)
+        assert "key_22" in dir(j.key_2)
+        with pytest.raises(JSaneException):
+            dir(j.nonexistent)
+
     def test_setting(self):
         j = loads(self.json1)
         assert "nonexistent" not in j
