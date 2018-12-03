@@ -1,7 +1,7 @@
 from numbers import Number
 
 
-class JSaneException(Exception):
+class JSaneException(KeyError):
     pass
 
 
