@@ -49,7 +49,9 @@ class TestClass:
                 "key_2442": ["ll1", "ll2"]
               }
             }
-          }
+          },
+          "numeric_string": "115",
+          "list": [1, 1, 2, 3, 5, 8]
         }
         """
         self.dict1 = {"foo": "bar"}
@@ -102,6 +104,27 @@ class TestClass:
         assert j.key_2.key_21[0].r() == [2100, 2101]
         assert j.key_2.key_21[0].r() == [2100, 2101]
         assert j.key_2.key_24.key_244.key_2442[0].r()[0] == "l"
+
+    def test_setting(self):
+        j = loads(self.json1)
+        assert "nonexistent" not in j
+        j.nonexistent = 5
+        assert j.nonexistent() == 5
+        del j.nonexistent
+        assert "nonexistent" not in j
+        j.list = [5]
+        assert j.list[0]() == 5
+        j.list[0] = "six"
+        assert j.list[0]() == "six"
+
+    def test_deleting(self):
+        j = loads(self.json1)
+        assert "r" in j
+        del j.r
+        assert "r" not in j
+        assert j.list() == [1, 1, 2, 3, 5, 8]
+        del j.list[1:-1]
+        assert j.list() == [1, 8]
 
     def test_equality_behavior(self):
         i = loads('{"five": 5}')

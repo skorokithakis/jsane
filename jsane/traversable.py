@@ -10,6 +10,15 @@ class Empty(object):
         return self  # Empty object returned should reflect the 1st failed key
     __getitem__ = __getattr__
 
+    def __setattr__(self, key, value):
+        if key == '_key_name':
+            return object.__setattr__(self, '_key_name', value)
+        raise JSaneException("There is nothing here!")
+
+    def __delattr__(self, key):
+        raise JSaneException("Key does not exist: %s" % (self._key_name,))
+    __delitem__ = __delattr__
+
     def __eq__(self, other):
         return False
 
@@ -47,6 +56,28 @@ class Traversable(object):
         except (KeyError, AttributeError, IndexError, TypeError):
             return Empty(key)
     __getitem__ = __getattr__
+
+    def __setattr__(self, key, value):
+        if key == '_obj':
+            object.__setattr__(self, '_obj', value)
+            return
+        if isinstance(value, Traversable):
+            value = value._obj
+        # may cause TypeError; allow this to fall through
+        self._obj[key] = value
+
+    def __setitem__(self, key, value):
+        if isinstance(value, Traversable):
+            value = value._obj
+        # may cause TypeError; allow this to fall through
+        self._obj[key] = value
+
+    def __delattr__(self, key):
+        try:
+            del self._obj[key]
+        except KeyError:
+            raise JSaneException("Key does not exist: %s" % (key,))
+    __delitem__ = __delattr__
 
     def __eq__(self, other):
         """
