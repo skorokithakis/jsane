@@ -122,30 +122,49 @@ If you want your real object back at the end of the wild attribute ride, call
     >>> j.foo.bar.r()
     {'baz': 'yes!'}
 
+Likewise, if you prefer, you can call the object as a function with no
+arguments::
+
+    >>> j.foo.bar()
+    {'baz': 'yes!'}
+
 If an attribute, item or index along the way does not exist, you'll get an
 exception. You can get rid of that by specifying a default::
 
     >>> import jsane
 
     >>> j = jsane.loads('{"some": "json"}')
-    >>> j.haha_sucka_this_doesnt_exist.r(default="💩")
+    >>> j.this.path.doesnt.exist.r()
+    Traceback (most recent call last):
+      ...
+    jsane.traversable.JSaneException: "Key does not exist: 'this'"
+    >>> j.haha_sucka_this_doesnt_exist_either.r(default="💩")
     '💩'
 
-"But how do I access a key called ``r``?!", I hear you ask. Worry not, I got you
-covered::
+"But how do I access a key called ``__call__``, ``r``, or ``_obj`` where you
+store the wrapped object?!", I hear you ask. Worry not, object keys are still
+accessible with indexing::
 
-    >>> j.key["r"].more_key.r()
-
-Confused? Don't name your keys ``r``, then.
+    >>> j = jsane.loads('{"r": {"__call__": {"_obj": 5}}}')
+    >>> j["r"]["__call__"]["_obj"].r()
+    5
 
 For convenience, you can access values specifically as numbers::
 
     >>> import jsane
 
-    >>> j = jsane.loads('{"numbers": {"one": [1, "11"]}, "letters": "XYZ"}')
-    >>> +j.numbers.one[0]
+    >>> j = jsane.loads('''
+    ...     {
+    ...       "numbers": {
+    ...         "one": 1,
+    ...         "two": "2"
+    ...       },
+    ...       "letters": "XYZ"
+    ...     }
+    ... ''')
+    >>> +j.numbers.one
     1
-    >>> +j.letter, +j.numbers.one[1]  # Things that aren't numbers are nan
+    >>> +j.letter, +j.numbers.two  # Things that aren't numbers are nan
     (nan, nan)
     >>> +j.numbers
     nan
@@ -153,7 +172,8 @@ For convenience, you can access values specifically as numbers::
     nan
 
 (NaN is not representable in JSON, so this should be enough for most use cases.
-Testing for NaN is also easy with the standard library ``math.isnan()`` function.)
+Testing for NaN is also easy with the standard library ``math.isnan()``
+function.)
 
 Likewise for strings, calling ``str()`` on a Traversable object is a simple
 shortcut::
@@ -161,23 +181,14 @@ shortcut::
     >>> str(j.letters)
     'XYZ'
     >>> str(j.numbers)
-    "{'one': [1, '11']}"
-    >>> str(j.numbers.one[0])
+    "{'one': 1, 'two': '2'}"
+    >>> str(j.numbers.one)
     '1'
 
 In the same fashion, ``int()`` and ``float()`` are also shortcuts, but unlike
 ``str()`` (and consistent with their behavior elsewhere in Python) they do not
 infallibly return objects of their respective type (that is, they may raise a
 ValueError instead).
-
-"But how do I access a key called ``__call__``, or ``_obj`` where you store the
-wrapped object?!", I hear you ask. Worry not, object keys are still accessible
-with indexing::
-
-    >>> j.key["__call__"].more_key.r()
-    Traceback (most recent call last):
-      ...
-    jsane.traversable.JSaneException: "Key does not exist: 'key'"
 
 That's about it. No guarantees of stability before version 1, as always. Semver
 giveth, and semver taketh away.
@@ -210,7 +221,7 @@ FAQ
 
   Yes.
 
-* All my JSON data uses '_obj' as keys!
+* All my JSON data uses 'r' and '_obj' as keys!
 
   Come on, man. :(
 
