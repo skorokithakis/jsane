@@ -14,7 +14,7 @@ Three-line intro
     >>> import jsane
     >>> j = jsane.loads('{"foo": {"bar": {"baz": ["well", "hello", "there"]}}}')
     >>> j.foo.bar.baz[1].r()
-    u'hello'
+    'hello'
 
 
 Motivation
@@ -103,7 +103,7 @@ Here's an example of its usage::
 You can also load an existing object::
     >>> j = jsane.from_object({"hi": "there"})
     >>> j.hi
-    'there'
+    <Traversable: 'there'>
 
 If the object contains any data types that aren't valid in JSON (like
 functions), it still should work, but you're on your own.
@@ -114,13 +114,19 @@ accesses::
 
     >>> j = jsane.loads('{"foo": {"bar": {"baz": "yes!"}}}')
     >>> type(j.foo)
-    Traversable
+    <class 'jsane.traversable.Traversable'>
 
 If you want your real object back at the end of the wild attribute ride, call
 ``.r()``::
 
     >>> j.foo.bar.r()
-    {"baz": "yes!"}
+    {'baz': 'yes!'}
+
+Likewise, if you prefer, you can call the object as a function with no
+arguments::
+
+    >>> j.foo.bar()
+    {'baz': 'yes!'}
 
 If an attribute, item or index along the way does not exist, you'll get an
 exception. You can get rid of that by specifying a default::
@@ -128,20 +134,64 @@ exception. You can get rid of that by specifying a default::
     >>> import jsane
 
     >>> j = jsane.loads('{"some": "json"}')
-    >>> j.haha_sucka_this_doesnt_exist.r(default="💩")
-    "💩"
+    >>> j.this.path.doesnt.exist.r()
+    Traceback (most recent call last):
+      ...
+    jsane.traversable.JSaneException: "Key does not exist: 'this'"
+    >>> j.haha_sucka_this_doesnt_exist_either.r(default="💩")
+    '💩'
 
-"But how do I access a key called ``r``?!", I hear you ask. Worry not, I got you
-covered::
+"But how do I access a key called ``__call__``, ``r``, or ``_obj`` where you
+store the wrapped object?!", I hear you ask. Worry not, object keys are still
+accessible with indexing::
 
-    >>> j.key["r"].more_key.r()
+    >>> j = jsane.loads('{"r": {"__call__": {"_obj": 5}}}')
+    >>> j["r"]["__call__"]["_obj"].r()
+    5
 
-Confused? Don't name your keys ``r``, then.
+For convenience, you can access values specifically as numbers::
 
-That's about it. I'm not loving the ``r()`` API, so if anyone has any good
-recommendations on how I may better fulfil my unholy purpose, I'm changing it on
-the spot. No guarantees of stability before version 1, as always. Semver giveth,
-and semver taketh away.
+    >>> import jsane
+
+    >>> j = jsane.loads('''
+    ...     {
+    ...       "numbers": {
+    ...         "one": 1,
+    ...         "two": "2"
+    ...       },
+    ...       "letters": "XYZ"
+    ...     }
+    ... ''')
+    >>> +j.numbers.one
+    1
+    >>> +j.letter, +j.numbers.two  # Things that aren't numbers are nan
+    (nan, nan)
+    >>> +j.numbers
+    nan
+    >>> +j.what  # Things that don't exist are also nan.
+    nan
+
+(NaN is not representable in JSON, so this should be enough for most use cases.
+Testing for NaN is also easy with the standard library ``math.isnan()``
+function.)
+
+Likewise for strings, calling ``str()`` on a Traversable object is a simple
+shortcut::
+
+    >>> str(j.letters)
+    'XYZ'
+    >>> str(j.numbers)
+    "{'one': 1, 'two': '2'}"
+    >>> str(j.numbers.one)
+    '1'
+
+In the same fashion, ``int()`` and ``float()`` are also shortcuts, but unlike
+``str()`` (and consistent with their behavior elsewhere in Python) they do not
+infallibly return objects of their respective type (that is, they may raise a
+ValueError instead).
+
+That's about it. No guarantees of stability before version 1, as always. Semver
+giveth, and semver taketh away.
 
 Help needed/welcome/etc, mostly with designing the API. Also, if you find this
 library useless, let me know.
@@ -171,12 +221,8 @@ FAQ
 
   Yes.
 
-* I hate the `.r()` thing, is there any way to avoid it?
+* All my JSON data uses 'r' and '_obj' as keys!
 
-  Did you even **read** this README?
-
-  Alright, there is now a way to avoid it. Instead of ``j.foo.bar.r()``, you can
-  just call the last key, i.e. ``j,foo.bar()``. Let me know what you think in
-  `the relevant issue <https://github.com/skorokithakis/jsane/issues/3>`_.
+  Come on, man. :(
 
 .. _The day is saved: https://www.youtube.com/watch?v=mWqGJ613M5Y

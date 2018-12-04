@@ -6,7 +6,7 @@ import pep8
 
 sys.path.insert(0, os.path.abspath(__file__ + "/../.."))
 
-from jsane import loads, dumps, JSaneException, from_dict, from_object
+from jsane import loads, dumps, JSaneException, from_dict, from_object, new
 from jsane.traversable import Traversable
 
 
@@ -49,7 +49,9 @@ class TestClass:
                 "key_2442": ["ll1", "ll2"]
               }
             }
-          }
+          },
+          "numeric_string": "115",
+          "list": [1, 1, 2, 3, 5, 8]
         }
         """
         self.dict1 = {"foo": "bar"}
@@ -88,20 +90,96 @@ class TestClass:
 
     def test_default(self):
         j = loads(self.json1)
-        assert j.key_1.key_2(None) is None
-        assert j.key_2.nonexistent[0]("default") == "default"
-        assert j.key_2.key_21[7]("default") == "default"
-        assert j.key_1.key_2.r(None) is None
-        assert j.key_2.nonexistent[0].r("default") == "default"
-        assert j.key_2.key_21[7].r("default") == "default"
+        assert j.key_1.key_2(default=None) is None
+        assert j.key_2.nonexistent[0](default="default") == "default"
+        assert j.key_2.key_21[7](default="default") == "default"
+        assert j.key_1.key_2.r(default=None) is None
+        assert j.key_2.nonexistent[0].r(default="default") == "default"
+        assert j.key_2.key_21[7].r(default="default") == "default"
         with pytest.raises(IndexError):
-            j.key_2.key_24.key_244.key_2442[0].r("default")[7]
+            j.key_2.key_24.key_244.key_2442[0].r(default="default")[7]
 
     def test_resolution(self):
         j = loads(self.json1)
         assert j.key_2.key_21[0].r() == [2100, 2101]
         assert j.key_2.key_21[0].r() == [2100, 2101]
         assert j.key_2.key_24.key_244.key_2442[0].r()[0] == "l"
+        assert j.key_2.key_21[0]() == [2100, 2101]
+        assert j.key_2.key_21[0]() == [2100, 2101]
+        assert j.key_2.key_24.key_244.key_2442[0]()[0] == "l"
+
+    def test_numeric_resolution(self):
+        j = loads(self.json1)
+        assert +j.key_2.key_24.key_241 == 502
+        assert +j.key_2.key_24.key_242[1][0] == 7
+        assert +j.key_1 != +j.key_1  # inequality to oneself is the NaN test
+        assert +j.nonexistent != +j.nonexistent
+        assert +j.numeric_string != +j.numeric_string
+
+    def test_easy_casting(self):
+        j = loads(self.json1)
+        assert str(j.key_2.key_21[0]) == "[2100, 2101]"
+        assert str(j.numeric_string) == "115"
+        assert int(j.numeric_string) == 115
+        assert float(j.numeric_string) == 115.0
+        assert type(float(j.numeric_string)) is float
+        assert float(j.key_2.key_24.key_241) == 502
+        assert type(float(j.key_2.key_24.key_241)) is float
+        with pytest.raises(ValueError):
+            int(j.key_1)
+        with pytest.raises(ValueError):
+            float(j.key_1)
+
+    def test_contains(self):
+        j = loads(self.json1)
+        assert "key_1" in j
+        assert "v" not in j.key_1  # do not pass 'in' operator to strings
+        assert "v" in j.key_1.r()
+        assert "key_22" in j.key_2
+        assert "l1" in j.key_2.key_22  # do pass 'in' operator to lists
+        assert "nonexistent" not in j
+
+    def test_dir(self):
+        j = loads(self.json1)
+        assert "numeric_string" in dir(j)
+        assert "key_22" in dir(j.key_2)
+        with pytest.raises(JSaneException):
+            dir(j.nonexistent)
+
+    def test_new(self):
+        assert new()() == {}
+        assert new(list)() == []
+
+    def test_setting(self):
+        j = loads(self.json1)
+        assert "nonexistent" not in j
+        j.nonexistent = 5
+        assert j.nonexistent() == 5
+        del j.nonexistent
+        assert "nonexistent" not in j
+        j.list = [5]
+        assert j.list[0]() == 5
+        j.list[0] = "six"
+        assert j.list[0]() == "six"
+
+    def test_deleting(self):
+        j = loads(self.json1)
+        assert "r" in j
+        del j.r
+        assert "r" not in j
+        assert j.list() == [1, 1, 2, 3, 5, 8]
+        del j.list[1:-1]
+        assert j.list() == [1, 8]
+
+    def test_equality_behavior(self):
+        i = loads('{"five": 5}')
+        f = loads('{"five": 5.0}')
+        assert i == f  # comparisons succeed between Traversable objects
+        assert i.five == f.five
+        assert i != {"five": 5}  # comparisons always return False otherwise
+        assert i.five != 5
+        assert i() == {"five": 5}
+        assert i.five() == 5  # once the value is out, comparison succeeds
 
     def test_pep8(self):
         pep8style = pep8.StyleGuide([['statistics', True],
