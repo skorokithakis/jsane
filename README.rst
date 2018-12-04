@@ -117,7 +117,7 @@ accesses::
     <class 'jsane.traversable.Traversable'>
 
 If you want your real object back at the end of the wild attribute ride, call
-it::
+``.r()``::
 
     >>> j.foo.bar.r()
     {'baz': 'yes!'}
@@ -130,6 +130,13 @@ exception. You can get rid of that by specifying a default::
     >>> j = jsane.loads('{"some": "json"}')
     >>> j.haha_sucka_this_doesnt_exist.r(default="💩")
     '💩'
+
+"But how do I access a key called ``r``?!", I hear you ask. Worry not, I got you
+covered::
+
+    >>> j.key["r"].more_key.r()
+
+Confused? Don't name your keys ``r``, then.
 
 For convenience, you can access values specifically as numbers::
 
@@ -146,9 +153,9 @@ For convenience, you can access values specifically as numbers::
     nan
 
 (NaN is not representable in JSON, so this should be enough for most use cases.
-Testing for NaN is also easy with the standard library math.isnan() function.)
+Testing for NaN is also easy with the standard library ``math.isnan()`` function.)
 
-Likewise for strings, calling str() on a Traversable object is a simple
+Likewise for strings, calling ``str()`` on a Traversable object is a simple
 shortcut::
 
     >>> str(j.letters)
@@ -158,8 +165,8 @@ shortcut::
     >>> str(j.numbers.one[0])
     '1'
 
-In the same fashion, int() and float() are also shortcuts but unlike str()
-(and consistent with their behavior elsewhere in Python) they do not
+In the same fashion, ``int()`` and ``float()`` are also shortcuts, but unlike
+``str()`` (and consistent with their behavior elsewhere in Python) they do not
 infallibly return objects of their respective type (that is, they may raise a
 ValueError instead).
 
