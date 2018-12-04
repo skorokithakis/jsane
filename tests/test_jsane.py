@@ -104,6 +104,9 @@ class TestClass:
         assert j.key_2.key_21[0].r() == [2100, 2101]
         assert j.key_2.key_21[0].r() == [2100, 2101]
         assert j.key_2.key_24.key_244.key_2442[0].r()[0] == "l"
+        assert j.key_2.key_21[0]() == [2100, 2101]
+        assert j.key_2.key_21[0]() == [2100, 2101]
+        assert j.key_2.key_24.key_244.key_2442[0]()[0] == "l"
 
     def test_numeric_resolution(self):
         j = loads(self.json1)
