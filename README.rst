@@ -13,7 +13,7 @@ Three-line intro
 
     >>> import jsane
     >>> j = jsane.loads('{"foo": {"bar": {"baz": ["well", "hello", "there"]}}}')
-    >>> j.foo.bar.baz[1]()
+    >>> j.foo.bar.baz[1].r()
     'hello'
 
 
@@ -79,7 +79,7 @@ Motivation (non-infomercial version)
 ------------------------------------
 
 Okay seriously, ``this["thing"]["is"]["no"]["fun"]``. JSane lets you
-``traverse.json.like.this()``. That's it.
+``traverse.json.like.this.r()``. That's it.
 
 
 Usage
@@ -97,7 +97,7 @@ Here's an example of its usage::
     >>> import jsane
 
     >>> j = jsane.loads('{"some": {"json": [1, 2, 3]}}')
-    >>> j.some.json[2]()
+    >>> j.some.json[2].r()
     3
 
 You can also load an existing object::
@@ -119,7 +119,7 @@ accesses::
 If you want your real object back at the end of the wild attribute ride, call
 it::
 
-    >>> j.foo.bar()
+    >>> j.foo.bar.r()
     {'baz': 'yes!'}
 
 If an attribute, item or index along the way does not exist, you'll get an
@@ -167,7 +167,7 @@ ValueError instead).
 wrapped object?!", I hear you ask. Worry not, object keys are still accessible
 with indexing::
 
-    >>> j.key["__call__"].more_key()
+    >>> j.key["__call__"].more_key.r()
     Traceback (most recent call last):
       ...
     jsane.traversable.JSaneException: "Key does not exist: 'key'"
